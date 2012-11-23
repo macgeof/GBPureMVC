@@ -1,0 +1,120 @@
+<project name="${PROJECT_NAME} Post-Build" default="load">
+
+	<!-- load previously defined configuration properties file -->
+	<property file="build.properties" />
+
+	<property name="library.src.path" value="src" />
+	<property name="library.lib.path" value="lib" />
+	<property name="library.application.info.class" value="src/com/gb/puremvc/patterns/GBFacade.as" />
+	<property name="library.application.info.swc.name" value="GBPureMVC" />
+	
+	<target name="load">
+		<echo>Ant Postbuild Tasks for project ${PROJECT_NAME}</echo>
+		<define-class-paths />
+	    <loadfile property="sourceFile" srcFile="${library.application.info.class}"/>
+		<script_test str="${sourceFile}" result="result"/>
+		<condition property="library-swc-present" >
+			<available file="${PROJECT_BIN_DIR}/${library.application.info.swc.name}.swc" />
+		</condition>
+		<antcall target="process-library-swc" />
+		<antcall target="library-swc-absent" />
+	</target>
+	
+	<target name="process-library-swc" if="library-swc-present">
+		<echo message="Post build script complete: refresh bin folder to find swc version: ${result}" />
+		<copy failonerror="off" file="${PROJECT_BIN_DIR}/${library.application.info.swc.name}.swc" tofile="${PROJECT_BIN_DIR}/${library.application.info.swc.name}_${result}.swc" />
+		<svn>
+			<!-- need to revert the newly compiled swc so as to leave the working copy in an unmodified state -->
+			<revert dir="${PROJECT_BIN_DIR}" />
+			<!-- update the bin, lib and src directories so as to leave the working copy in an unmodified state -->
+			<update dir="${PROJECT_BIN_DIR}" recurse="true" revision="COMMITED" />
+			<update dir="${library.lib.path}" recurse="true" revision="COMMITED" />
+			<update dir="${library.src.path}" recurse="true" revision="COMMITED" />
+		</svn>
+		<delete file="${PROJECT_BIN_DIR}/${library.application.info.swc.name}.swc" />
+	</target>
+	
+	<target name="library-swc-absent" unless="library-swc-present">
+		<echo>No ${library.application.info.swc.name}.swc is present in the ${PROJECT_BIN_DIR} directory. Please build the project prior to running the post build ant tasks</echo>
+	</target>
+	
+	<macrodef name="define-class-paths">
+		<sequential>
+			<!-- find the eclipse install location -->
+			<script language="javascript">
+				<![CDATA[
+
+				// Because ${eclipse.home} is not available, determine the install
+				// location using the pdebuild.scripts location
+
+				self.log("Looking for Eclipse installation...");
+				var base = project.getProperty("eclipse.pdebuild.scripts");
+				var path_pieces = base.split("/");
+				var path = "";
+				outterLoop: for(var i = path_pieces.length; i >= 0; --i)
+				{
+					if(path_pieces[i] == "Adobe Flash Builder 4.6" || path_pieces[i] == "Adobe Flex Builder 4" || path_pieces[i] == "Adobe Flex Builder 3")
+					{
+						// After determining which array item refers to the Adobe Flash Builder or Flex Builder
+						// installation, start at the beginning of the array and count up to that point, adding
+						// paths as you go.
+						var k = 0;
+						while( k <= i )
+						{
+							path += path_pieces[k] + "/";
+							++k;
+						}
+
+						break outterLoop;
+					}
+				}
+
+				// TODO: MAKE SURE THE PATH IS NOT EMPTY
+				self.log("Install path found at: " + path);
+
+				project.setProperty("install.location", path);
+
+				]]>
+
+			</script>
+	
+			<!-- points to our flexTasks.jar we copied to the libs folder to distribute with the project -->
+			<path id="flexTasks.jar.location" location="${install.location}/sdks/${flex.sdk.dir.name}/ant/lib/flexTasks.jar" />
+			<pathconvert targetos="windows" property="flexTasks.jar.agnostic" refid="flexTasks.jar.location" />
+			<pathconvert targetos="unix" property="flexTasks.jar.agnostic" refid="flexTasks.jar.location" />
+			<echo>converted path : flexTasks.jar.agnostic = ${flexTasks.jar.agnostic}</echo>
+			<taskdef resource="flexTasks.tasks" classpath="${flexTasks.jar.agnostic}"/>
+
+			<!-- points to our svnant jar files that exist on the local filesystem at the path defined in the build.properties ${svnant.lib.dir} property -->
+			<path id="project.classpath">
+				<pathelement location="${install.location}/${svnant.jar}" />
+				<pathelement location="${install.location}/${svnClientAdapter.jar}" />
+				<pathelement location="${install.location}/${svnjavahl.jar}" />
+				<pathelement location="${install.location}/${svnkit.jar}" />
+			</path>
+			<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="project.classpath"/>
+
+			<!-- points to our antform jar files that exist on the local filesystem at the path defined in the build.properties ${antform.lib.dir} property -->
+			<path id="antform.jar.location" location="${install.location}/sdks/antform/lib/antform.jar" />
+			<pathconvert targetos="windows" property="antform.jar.agnostic" refid="antform.jar.location" />
+			<pathconvert targetos="unix" property="antform.jar.agnostic" refid="antform.jar.location" />
+			<taskdef name="antform" classname="com.sardak.antform.AntForm" classpath="${antform.jar.agnostic}"/>
+			<echo>converted path : antform.jar.agnostic = ${antform.jar.agnostic}</echo>
+		</sequential>
+	</macrodef>
+	
+	<scriptdef name="script_test" language="javascript">
+	    <attribute name="str" />
+	    <attribute name="result" />  
+
+	    <![CDATA[
+		  var txt = attributes.get("str");
+		  var patt = /VERSION:String = "(.*?)"/;
+		  var result = patt.exec(txt);
+
+		 self.project.setProperty(attributes.get("result"), result[1]);
+	    ]]>
+		
+	</scriptdef>
+	
+</project>

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum
+END
+LoadParams.as
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum/LoadParams.as
+END
+LoggerTypes.as
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum/LoggerTypes.as
+END
+SettingsTypes.as
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum/SettingsTypes.as
+END
+Languages.as
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum/Languages.as
+END
+Environments.as
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum/Environments.as
+END
+ExternalInterfaceMethods.as
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum/ExternalInterfaceMethods.as
+END
+Countries.as
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum/Countries.as
+END
+ResourceTypes.as
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/model/enum/ResourceTypes.as
+END

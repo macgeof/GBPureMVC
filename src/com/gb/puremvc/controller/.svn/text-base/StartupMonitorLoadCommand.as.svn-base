@@ -1,0 +1,24 @@
+package com.gb.puremvc.controller
+{
+	import com.gb.puremvc.model.enum.GBNotifications;
+	import com.gb.puremvc.model.vo.StartupMonitorVO;
+	
+	import org.puremvc.as3.multicore.interfaces.INotification;
+	import org.puremvc.as3.multicore.patterns.command.SimpleCommand;
+	import org.puremvc.as3.multicore.utilities.startupmanager.model.StartupMonitorProxy;
+	
+	public class StartupMonitorLoadCommand extends SimpleCommand
+	{
+		override public function execute(notification:INotification):void
+		{
+			super.execute(notification);
+			
+			var data:StartupMonitorVO = StartupMonitorVO(notification.getBody());
+			
+			var monitor:StartupMonitorProxy = StartupMonitorProxy(facade.retrieveProxy(StartupMonitorProxy.NAME));
+			monitor.loadResources();
+			
+			sendNotification(GBNotifications.STARTUP_STARTED);
+		}
+	}
+}

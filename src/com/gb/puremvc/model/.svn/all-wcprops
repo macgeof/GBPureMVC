@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/flash_frameworks/!svn/ver/20/trunk/GBPureMVC/src/com/gb/puremvc/model
+END
+EntityProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/flash_frameworks/!svn/ver/12/trunk/GBPureMVC/src/com/gb/puremvc/model/EntityProxy.as
+END
+GBDataProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/flash_frameworks/!svn/ver/11/trunk/GBPureMVC/src/com/gb/puremvc/model/GBDataProxy.as
+END
+LoaderInfoProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/puremvc/model/LoaderInfoProxy.as
+END
+XrayProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/flash_frameworks/!svn/ver/12/trunk/GBPureMVC/src/com/gb/puremvc/model/XrayProxy.as
+END
+FlexFontProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/flash_frameworks/!svn/ver/20/trunk/GBPureMVC/src/com/gb/puremvc/model/FlexFontProxy.as
+END
+XMLLoaderProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/flash_frameworks/!svn/ver/20/trunk/GBPureMVC/src/com/gb/puremvc/model/XMLLoaderProxy.as
+END
+CanonDataProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/flash_frameworks/!svn/ver/12/trunk/GBPureMVC/src/com/gb/puremvc/model/CanonDataProxy.as
+END
+StyleSheetProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/puremvc/model/StyleSheetProxy.as
+END
+AbstractLoaderProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/flash_frameworks/!svn/ver/12/trunk/GBPureMVC/src/com/gb/puremvc/model/AbstractLoaderProxy.as
+END
+ExternalInterfaceProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/flash_frameworks/!svn/ver/12/trunk/GBPureMVC/src/com/gb/puremvc/model/ExternalInterfaceProxy.as
+END
+AbstractProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/flash_frameworks/!svn/ver/20/trunk/GBPureMVC/src/com/gb/puremvc/model/AbstractProxy.as
+END
+LibraryProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/flash_frameworks/!svn/ver/3/trunk/GBPureMVC/src/com/gb/puremvc/model/LibraryProxy.as
+END
+SWFAddressProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/flash_frameworks/!svn/ver/12/trunk/GBPureMVC/src/com/gb/puremvc/model/SWFAddressProxy.as
+END
+FontProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/flash_frameworks/!svn/ver/20/trunk/GBPureMVC/src/com/gb/puremvc/model/FontProxy.as
+END
+ConfigurationProxy.as
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/flash_frameworks/!svn/ver/12/trunk/GBPureMVC/src/com/gb/puremvc/model/ConfigurationProxy.as
+END

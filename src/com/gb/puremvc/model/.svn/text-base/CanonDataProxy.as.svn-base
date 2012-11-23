@@ -1,0 +1,218 @@
+package com.gb.puremvc.model 
+{
+	import com.gb.model.enum.LoadParams;
+	import com.gb.model.enum.ResourceTypes;
+	import com.gb.puremvc.model.enum.GBNotifications;
+	import com.gb.puremvc.model.enum.Cores;
+	import com.gb.puremvc.model.vo.StartupMonitorVO;
+	import com.gb.puremvc.model.vo.StartupResourceVO;
+	
+	import flash.events.*;
+	
+	import org.puremvc.as3.multicore.utilities.startupmanager.interfaces.IStartupProxy;
+	
+	/**
+	 * Canon specific.
+	 * <p>
+	 * Loads the data XML containing all localised labels from path specified in <code>data</code> 
+	 * parameter of  <code>flashVars</code> or from default path if not defined.</p> 
+	 * <p>
+	 * Data is exposed as raw XML via the <code>Proxy.getData()</code> method and 
+	 * individual resources can be accessed through the <code>DataProxy.getResource()</code>
+	 * method.</p> 
+	 */
+	public class CanonDataProxy extends XMLLoaderProxy
+	{
+		public static const NAME:String = "CanonDataProxy";		
+		
+		// Default paths for local testing
+		protected static const DEFAULT_DATA_PATH:String = "xml/data.xml";
+		protected static const DEFAULT_LOCATIONS_PATH:String = "xml/locations.xml";
+		protected static const DEFAULT_STRUCTURE_PATH:String = "xml/structure.xml";
+				
+		// Startup resource IDs
+		protected static const XRAY:String = "xray";
+		protected static const FONT:RegExp = /font_[A-Za-z]*/;
+		protected static const LIBRARY:String = "library";
+		protected static const STYLESHEET:String = "stylesheet";
+		
+		protected var startupProxies:Vector.<IStartupProxy> = new Vector.<IStartupProxy>();
+		
+		/**
+		 * Constructor.
+		 */
+		public function CanonDataProxy(proxyName:String = null, data:Object = null) 
+		{
+			super(proxyName, data);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function load():void 
+		{
+			var data:String = loadParams.getSetting(LoadParams.DATA_XML);
+			
+			resources = new Vector.<StartupResourceVO>();
+			
+			// Create the resources for the trio of Canon XML
+			resources.push(getStartupResource(LoadParams.DATA_XML, DEFAULT_DATA_PATH));
+			resources.push(getStartupResource(LoadParams.LOCATIONS_XML, DEFAULT_LOCATIONS_PATH));
+			resources.push(getStartupResource(LoadParams.STRUCTURE_XML, DEFAULT_STRUCTURE_PATH));
+
+			super.load();
+        }
+
+		private function getStartupResource(id:String, $default:String):StartupResourceVO
+		{
+			if (resources == null)
+				resources = new Vector.<StartupResourceVO>();
+			
+			var url:String = loadParams.getSetting(id);
+			
+			// Use default path if it hasn't been specified in flashVars
+			if (url == null)
+				url = $default;
+			
+			return new StartupResourceVO(url, {
+				id: id, 
+				preventCache: true
+			});
+		}
+		
+		override protected function onLoad():void 
+		{
+			super.onLoad();
+			
+			parse(xml);
+			parseConfig();
+			
+			sendNotification(GBNotifications.STARTUP_MONITOR_ADD_RESOURCES, 
+				new StartupMonitorVO(startupProxies, false));
+		}	
+		
+		protected function parseConfig():void
+		{
+			var xray:String = getLocationsResource(XRAY);
+			if (xray != "")
+				startupProxies.push(new XrayProxy(XrayProxy.NAME, getResource(xray)));
+			
+			var fonts:Vector.<StartupResourceVO> = getFontResources();
+			if (fonts != null)
+				startupProxies.push(new FontProxy(FontProxy.NAME, fonts));
+			
+			// Canon only supports a single library
+			var library:String = getLocationsResource(LIBRARY);
+			if (library != "")
+				startupProxies.push(new LibraryProxy(LibraryProxy.NAME, getResource(library)));
+			
+			// Canon only supports a single stylesheet
+			var styleSheet:String = getStructureResource(STYLESHEET);
+			if (styleSheet != "")
+				startupProxies.push(new StyleSheetProxy(StyleSheetProxy.NAME, getResource(styleSheet)));	
+		}
+		
+		private function getResource(url:String):Vector.<StartupResourceVO>
+		{
+			var vector:Vector.<StartupResourceVO> = new Vector.<StartupResourceVO>();
+			vector.push(new StartupResourceVO(url, {id: Cores.SHELL}));
+			
+			return vector; 
+		}
+		
+		private function getFontResources():Vector.<StartupResourceVO>
+		{
+			var fonts:XMLList = getXML(LoadParams.LOCATIONS_XML).resource.(FONT.test(@name));
+			var tmp:Vector.<StartupResourceVO> = new Vector.<StartupResourceVO>;
+			
+			if (fonts.length() > 0)
+			{
+				for each (var font:XML in fonts)
+				tmp.push(new StartupResourceVO(
+					font.@value.toString(),
+					{id: font.@id.toString()}
+				));
+				
+				return tmp;				
+			}
+			
+			return null;
+		}
+		
+		private function getStartupProxyXML(proxyClass:Class, id:String):IStartupProxy
+		{
+			return new proxyClass(proxyClass.NAME, new StartupResourceVO(loadParams.getSetting(id)));
+		}		
+		
+		// TODO: this should probably be abstracted out of this class
+		protected function parse(_xml:*, depth:int = 0):void
+		{
+			var xmlList:XMLList = _xml.children();		
+			if (xmlList.length() > 0) 
+			{
+				for each (var item_xml:XML in xmlList)
+				{
+					var id:String;
+
+					if (item_xml.hasOwnProperty("@title"))
+					{
+						id = item_xml.@title;
+						item_xml.@title = getDataResource(id);
+					}
+					if (item_xml.hasOwnProperty("@label"))
+					{
+						id = item_xml.@label;
+						item_xml.@label = getDataResource(id);
+					}
+					if (item_xml.hasOwnProperty("@copy"))
+					{
+						id = item_xml.@copy;
+						item_xml.@copy = getDataResource(id);
+					}
+					if (item_xml.hasOwnProperty("@src"))
+					{
+						id = item_xml.@src;
+						item_xml.@src = getLocationsResource(id);
+					}
+					if (item_xml.hasOwnProperty("@url"))
+					{
+						id = item_xml.@url;
+						item_xml.@url = getLocationsResource(id);
+					}
+					
+					parse(item_xml, depth + 1);
+				}
+			} 
+		}			
+		
+		public function getStructureResource($name:String):String
+		{
+			return xml.resource.(@name == $name).@value.toString();
+		}
+		
+		public function getDataResource($key:String):String
+		{
+			return dataXML.resource.(@key == $key).toString();	
+		}
+		
+		public function getLocationsResource($name:String):String
+		{
+			return locationsXML.resource.(@name == $name).@value.toString();
+		}
+		
+		override public function get xml():XML
+		{
+			return getXML(LoadParams.STRUCTURE_XML);
+		}
+		
+		public function get locationsXML():XML
+		{
+			return getXML(LoadParams.LOCATIONS_XML);
+		}
+		
+		public function get dataXML():XML
+		{
+			return getXML(LoadParams.DATA_XML);
+		}		
+	}
+}

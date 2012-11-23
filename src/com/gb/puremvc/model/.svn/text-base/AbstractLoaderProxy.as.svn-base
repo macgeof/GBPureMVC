@@ -1,0 +1,137 @@
+package com.gb.puremvc.model 
+{
+	import br.com.stimuli.loading.BulkLoader;
+	import br.com.stimuli.loading.BulkProgressEvent;
+	
+	import com.gb.puremvc.model.enum.GBNotifications;
+	import com.gb.puremvc.model.vo.StartupResourceVO;
+	
+	import flash.events.*;
+	
+	import org.puremvc.as3.multicore.utilities.startupmanager.controller.FailureInfo;
+	
+	/**
+	 * Base class for proxies which load resources.
+	 * <p>
+	 * Override the <code>onRegister</code> method in the subclass to configure the 
+	 * <code>BulkLoader</code> instance.</p>
+	 */
+	public class AbstractLoaderProxy extends EntityProxy
+	{
+		protected var _loader:BulkLoader; 
+		protected var _progress:Number;
+		
+		protected var _notifyStartupManager:Boolean = true;
+		
+		/**
+		 * @inheritDoc
+		 */		
+		public function AbstractLoaderProxy(proxyName:String = null, data:Object = null) 
+		{
+			super(proxyName, data);
+			 
+			_loader = new BulkLoader(this.proxyName + "Loader");
+		}
+		
+		/**
+		 * Initiates load.
+		 */ 
+		override public function load():void 
+		{
+			if (_notifyStartupManager)
+            	sendLoadedNotification(GBNotifications.STARTUP_RESOURCE_LOADING, proxyName, proxyNameSR);
+			
+			addListeners();
+	
+			if (resources != null)
+			{
+				var resource:StartupResourceVO;
+				for (var i:int = 0; i < resources.length; i ++)
+				{
+					resource = StartupResourceVO(resources[i]);
+					_loader.add(resource.src, resource.props);
+				}
+			}
+			
+			_loader.start();
+        }
+		
+		protected function addListeners():void
+		{
+			_loader.addEventListener(BulkProgressEvent.PROGRESS, progressHandler);
+			_loader.addEventListener(BulkLoader.COMPLETE, completeHandler);
+			_loader.addEventListener(BulkLoader.ERROR, errorHandler);
+		}
+
+		protected function removeListeners():void
+		{
+			_loader.removeEventListener(BulkProgressEvent.PROGRESS, progressHandler);
+			_loader.removeEventListener(BulkLoader.COMPLETE, completeHandler);
+			_loader.removeEventListener(BulkLoader.ERROR, errorHandler);
+		}		
+		
+		protected function progressHandler(event:BulkProgressEvent = null):void 
+		{
+			_progress = event._ratioLoaded;
+			onProgress();
+		}
+		
+		protected function completeHandler(event:Event = null):void 
+		{
+			onLoad();
+			
+			removeListeners();
+           
+			if (_notifyStartupManager)
+				sendLoadedNotification(GBNotifications.STARTUP_RESOURCE_LOADED, proxyName, proxyNameSR);
+		}
+		
+		protected function onLoad():void
+		{
+			// Implement in subclass
+		}
+		
+		protected function onProgress():void
+		{
+			// Implement in subclass
+		}
+		
+		protected function errorHandler(event:ErrorEvent = null):void 
+		{
+			removeListeners();
+			
+			if (_notifyStartupManager)
+            	sendLoadedNotification(GBNotifications.STARTUP_RESOURCE_FAILED, new FailureInfo(proxyName, true), proxyNameSR);
+        }
+
+		public function get loader():BulkLoader
+		{
+			return _loader;
+		}
+		
+		/**
+		 * Returns load progress as a ratio between 0 and 1.
+		 * 
+		 * @return 	load progress as a ratio between 0 and 1
+		 */
+		public function get progress():Number
+		{
+			return _progress;
+		}
+
+		public function set notifyStartupManager(value:Boolean):void
+		{
+			_notifyStartupManager = value;
+		}
+		
+		public function get resources():Vector.<StartupResourceVO>
+		{
+			return this.getData() as Vector.<StartupResourceVO>;
+		}
+		
+		public function set resources(value:Vector.<StartupResourceVO>):void
+		{
+			setData(value);
+		}
+	}
+}
