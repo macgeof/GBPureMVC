@@ -87,12 +87,14 @@
 		
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean=false, priority:int=0, useWeakReference:Boolean=false):void
 		{
-			throw new Error("Please use the PureMVC Pipes framework to send and receive messages from a core!");
+			trace("Please use the PureMVC Pipes framework to send and receive messages from a core!");
+			trace("Your event listener has NOT been added, and will not function");
 		}
 		
 		override public function removeEventListener(type:String, listener:Function, useCapture:Boolean=false):void
 		{
-			throw new Error("Please use the PureMVC Pipes framework to send and receive messages from a core!");
+			trace("Please use the PureMVC Pipes framework to send and receive messages from a core!");
+			trace("Your event listener was NOT added, and so has not been removed either");
 		}
 	}
 }
