@@ -26,5 +26,11 @@
 		 * Destroys the core.
 		 */
 		function destroy():void;
+		
+		function pause():void;
+		function stop():void;
+		function play():void;
+		function enable():void;
+		function disable():void;
 	}
 }

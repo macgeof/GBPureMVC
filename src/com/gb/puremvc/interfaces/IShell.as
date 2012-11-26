@@ -11,5 +11,7 @@ package com.gb.puremvc.interfaces
 		 * @return 	the concrete root <code>Mediator</code> for the shell
 		 */		
 		function get applicationMediator():Class;
+		
+		function coreTransitionedOut(__core:ICore):void;
 	}
 }

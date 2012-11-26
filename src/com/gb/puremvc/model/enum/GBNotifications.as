@@ -32,5 +32,12 @@ package com.gb.puremvc.model.enum
 		
 		// Logger notification names.
 		public static const LOGGER_INITIALIZED:String = "loggerInitialized";
+		
+		//interface methods for cores
+		public static const PAUSE:String = "pauseCore";
+		public static const PLAY:String = "playCore";
+		public static const STOP:String = "stopCore";
+		public static const ENABLE:String = "enableCore";
+		public static const DISABLE:String = "disableCore";
 	}
 }

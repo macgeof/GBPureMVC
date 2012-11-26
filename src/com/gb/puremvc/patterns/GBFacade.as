@@ -1,6 +1,7 @@
 ﻿package com.gb.puremvc.patterns
 {
 	import com.gb.puremvc.controller.*;
+	import com.gb.puremvc.interfaces.IShellFacade;
 	import com.gb.puremvc.model.enum.GBNotifications;
 	
 	import flash.display.LoaderInfo;
@@ -16,7 +17,7 @@
 	 * <p>
 	 * Abstracts framework startup functionality.</p> 
 	 */
-    public class GBFacade extends Facade implements IFacade
+    public class GBFacade extends Facade implements IShellFacade
     {		
 		// Framework version.
 		public static const GB_FRAMEWORK_VERSION:String = "3.0.0.r.34";

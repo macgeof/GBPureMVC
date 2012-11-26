@@ -57,5 +57,26 @@
 			
 			sendNotification(GBNotifications.DESTROY);
 		}
+		
+		public function pause():void
+		{
+			//override in subclass
+		}
+		public function stop():void
+		{
+			//override in subclass
+		}
+		public function play():void
+		{
+			//override in subclass
+		}
+		public function enable():void
+		{
+			//override in subclass
+		}
+		public function disable():void
+		{
+			//override in subclass
+		}
 	}
 }

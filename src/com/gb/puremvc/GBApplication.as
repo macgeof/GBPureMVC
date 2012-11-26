@@ -1,18 +1,11 @@
 ﻿package com.gb.puremvc 
 {
-	import com.gb.puremvc.controller.ApplicationStartupCommand;
 	import com.gb.puremvc.interfaces.*;
-	import com.gb.puremvc.patterns.GBFacade;
 	
-	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
-	
-	import org.puremvc.as3.multicore.interfaces.IFacade;
-	import org.puremvc.as3.multicore.interfaces.IMediator;
-	import org.puremvc.as3.multicore.patterns.mediator.Mediator;
 	
 	/**
 	 * Base class for non-Flex document classes of an GBPureMVC application. 
@@ -26,7 +19,7 @@
 		private static const RESIZE_TIMER_DELAY:int = 500;
 		private static const RESIZE_TIMER_REPEAT:int = 10;
 		
-		protected var facade:GBFacade;
+		protected var facade:IShellFacade;
 		protected var resizeTimer:Timer;
 		
 		/**
@@ -115,6 +108,12 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			startup();
-		}	
+		}
+		
+		public function coreTransitionedOut(__core:ICore):void
+		{
+			__core.destroy();
+			
+		}
 	}
 }

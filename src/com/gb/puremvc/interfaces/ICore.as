@@ -1,5 +1,7 @@
 ﻿package com.gb.puremvc.interfaces 
 {
+	import com.gb.transitions.AbstractTransition;
+	
 	import flash.display.DisplayObject;
 
 	/**
@@ -16,6 +18,16 @@
 		 * Destroys the core.
 		 */
 		function destroy():void;
+		
+		/**
+		 * Transitions out the core - can be used to sequence removal of core
+		 */
+		function transitionOut(__transition:AbstractTransition):void;
+		
+		/**
+		 * Transitions in the core - can be used to sequence creation of core
+		 */
+		function transitionIn(__transition:AbstractTransition):void;
 
 		/**
 		 * Returns the concrete root <code>Mediator</code> for this core.
@@ -38,6 +50,12 @@
 		function set _parent(value:DisplayObject):void;		
 		
 		function get data():*
-		function set data(value:*):void;	
+		function set data(value:*):void;
+		
+		function pause():void;
+		function stop():void;
+		function play():void;
+		function enable():void;
+		function disable():void;
 	}
 }

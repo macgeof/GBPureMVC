@@ -119,6 +119,12 @@ package com.gb.puremvc
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			startup();
+		}
+		
+		public function coreTransitionedOut(__core:ICore):void
+		{
+			__core.destroy();
+			
 		}	
 	}
 }

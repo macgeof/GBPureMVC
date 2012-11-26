@@ -1,6 +1,7 @@
 ﻿package com.gb.puremvc 
 {
 	import com.gb.puremvc.interfaces.*;
+	import com.gb.transitions.AbstractTransition;
 	import com.lassie.lib.IMediaLibrary;
 	
 	import flash.display.DisplayObject;
@@ -85,16 +86,37 @@
 			_data = value;
 		}
 		
-		override public function addEventListener(type:String, listener:Function, useCapture:Boolean=false, priority:int=0, useWeakReference:Boolean=false):void
+		public function transitionIn(__transition:AbstractTransition):void
 		{
-			trace("Please use the PureMVC Pipes framework to send and receive messages from a core!");
-			trace("Your event listener has NOT been added, and will not function");
+			
 		}
 		
-		override public function removeEventListener(type:String, listener:Function, useCapture:Boolean=false):void
+		public function transitionOut(__transition:AbstractTransition):void
 		{
-			trace("Please use the PureMVC Pipes framework to send and receive messages from a core!");
-			trace("Your event listener was NOT added, and so has not been removed either");
+			
 		}
+		
+		public function pause():void
+		{
+			//override in subclass
+		}
+		public function stop():void
+		{
+			//override in subclass
+		}
+		public function play():void
+		{
+			//override in subclass
+		}
+		public function enable():void
+		{
+			//override in subclass
+		}
+		public function disable():void
+		{
+			//override in subclass
+		}
+		
+		
 	}
 }
